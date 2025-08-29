@@ -12,10 +12,10 @@ export const MAX_SIZES: number[] = [0.2, 0.1, 0.05, 0.02]
 
 export const AVG_BRANCHES = 3;
 export const BRANCH_VARIANCE = 1;
-export const MAX_NODES = 1000;
+export const MAX_NODES = 1200;
 
 // Average duration for a spruce to grow in seconds
-export const GROWTH_RATE = 1.5;
+export const GROWTH_RATE = 2;
 const GROW_AT_END = 0.8;
 
 export const getMaxContinuation = (depth: number) => {
