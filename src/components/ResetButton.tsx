@@ -1,16 +1,16 @@
 "use client";
 
-export default function ResetButton({ event }) {
+import { TurfEvent, createTurfForEvent } from "@/lib/turf";
+
+type ResetButtonProps = {
+  event: string;
+  onReset?: (x: TurfEvent) => void;
+};
+
+export default function ResetButton({ event, onReset }: Readonly<ResetButtonProps>) {
   const onClick = async () => {
-    const res = await fetch("/api/turfs", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        event_name: event,
-      }),
-    });
+    const data = await createTurfForEvent(event);
+    if (onReset) onReset(data);
   };
 
   return (

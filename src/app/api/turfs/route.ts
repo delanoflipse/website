@@ -1,22 +1,24 @@
 import { NextResponse } from "next/server";
-import { getLatestTurfs } from "@/lib/db/tables/turfs";
-import { queryPlanetscale } from "@/lib/db/client/planetscale";
-
+import { neon } from "@neondatabase/serverless";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const event_name = searchParams.get("event");
 
-  const currentTurfs = await getLatestTurfs();
+  const sql = neon(process.env.DATABASE_URL ?? "");
 
-  // const { rows } = await connection.execute("SELECT * FROM turfs WHERE event_name=?", [event_name]);
-  return NextResponse.json(currentTurfs);
+  const data =
+    await sql`SELECT * FROM turfs WHERE event=${event_name} ORDER BY time DESC LIMIT 1;`;
+  const response = data[0] ?? null;
+  return NextResponse.json(response);
 }
 
 export async function POST(request: Request) {
   const { event_name } = await request.json();
-  
-  const rows = await queryPlanetscale("SELECT * FROM turfs WHERE event_name=?", [event_name]);
 
-  return NextResponse.json(rows);
+  const sql = neon(process.env.DATABASE_URL ?? "");
+  const rows =
+    await sql`INSERT INTO turfs (event) VALUES (${event_name}) RETURNING *;`;
+
+  return NextResponse.json(rows[0] ?? null);
 }
