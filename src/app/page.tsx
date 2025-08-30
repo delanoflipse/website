@@ -61,16 +61,19 @@ export default async function Home() {
               <TechIcon icon="/icons/java.svg" name="Java" />
             </div>
 
-            <div className="mt-8">
-              <LinkButton href="https://github.com/delanoflipse" variant="primary"
+            <div className="mt-8 lg:mt-10 xl:mt-16">
+              <LinkButton
+                href="https://github.com/delanoflipse"
+                variant="primary"
                 icon={
                   <Image
                     src="./icons/github_white.svg"
                     alt="github"
                     width={24}
                     height={24}
-                    className='object-contain w-full h-full text-white'
-                  />}
+                    className="object-contain w-full h-full text-white"
+                  />
+                }
               >
                 GitHub
               </LinkButton>
@@ -80,7 +83,7 @@ export default async function Home() {
 
         <div>
           <span className="text-gray-600">
-            &copy; {new Date().getFullYear()} Delano Flipse
+            &copy; {new Date().getFullYear()} {"\u2022"} Delano Flipse
           </span>
         </div>
       </div>
