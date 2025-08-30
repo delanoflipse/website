@@ -26,7 +26,7 @@ const latoSemiBold = Lato({
 });
 
 const Button = ({ children, onClick }: any) => {
-  return <button className={`p-2 px-6 rounded-full shadow-sm font-bold ${latoSemiBold.className} text-lg border-black border-4 hover:bg-black hover:text-white`} onClick={onClick}>
+  return <button className={`p-2 px-8 rounded-full shadow-sm font-bold ${latoSemiBold.className} text-lg border-black border-4 hover:bg-black hover:text-white`} onClick={onClick}>
     {children}
   </button>
 }
@@ -39,7 +39,7 @@ export default function Home() {
   const updateLastTimes = useCallback(async () => {
     setLoading(true);
     const turf = await getLatestTurfForEvent(EVENT_NAME);
-    setLastTimes(dayjs(turf.time));
+    setLastTimes(dayjs(turf?.time));
     setLoading(false);
   }, []);
 
@@ -58,8 +58,8 @@ export default function Home() {
 
   return (
     <main className="w-full h-full">
-      {toggle && <div className="absolute z-30 left-0 top-0 bottom-0 right-0 bg-[yellow] flex p-8 items-center flex-col justify-center gap-4">
-        <div className={`text-3xl md:text-5xl lg:text-6xl ${latoSemiBold.className}`}>Is het weer zo ver?</div>
+      {toggle && <div className="absolute z-30 left-0 top-0 bottom-0 right-0 bg-[yellow] flex p-8 items-center flex-col justify-center">
+        <div className={`text-3xl md:text-5xl lg:text-6xl ${latoSemiBold.className} mb-8`}>Is het weer zo ver?</div>
         <div className="flex gap-4">
           <Button onClick={onClick}>Ja</Button>
           <Button onClick={() => setToggle(false)}>Nee</Button>
@@ -85,7 +85,6 @@ export default function Home() {
               <button
                 type="button"
                 className="absolute left-[35%] right-[35%] top-[5%] bottom-[45%] cursor-pointer bg-transparent border-none p-0"
-                aria-label="Open Paay Modal"
                 onClick={() => setToggle(true)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
