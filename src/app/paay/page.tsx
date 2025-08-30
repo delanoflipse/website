@@ -1,8 +1,7 @@
 "use client";
 import Image from "next/image";
-import { Inter, Lato } from "next/font/google";
-import ResetButton from "@/components/ResetButton";
-import { TurfEvent, createTurfForEvent, getLatestTurfForEvent } from "@/lib/turf";
+import { Lato } from "next/font/google";
+import { createTurfForEvent, getLatestTurfForEvent } from "@/lib/turf";
 import { useCallback, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -15,10 +14,7 @@ dayjs.locale("nl");
 dayjs.extend(timezone);
 dayjs.extend(relativeTime);
 
-// const inter = Inter({ subsets: ["latin"] });
-
 const EVENT_NAME = "paay";
-
 
 const latoSemiBold = Lato({
   weight: "700",
@@ -26,10 +22,15 @@ const latoSemiBold = Lato({
 });
 
 const Button = ({ children, onClick }: any) => {
-  return <button className={`p-2 px-8 rounded-full shadow-sm font-bold ${latoSemiBold.className} text-lg border-black border-4 hover:bg-black hover:text-white`} onClick={onClick}>
-    {children}
-  </button>
-}
+  return (
+    <button
+      className={`p-2 px-8 rounded-full shadow-sm font-bold ${latoSemiBold.className} text-lg border-black border-4 hover:bg-black hover:text-white`}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+};
 
 export default function Home() {
   const [lastTimes, setLastTimes] = useState<dayjs.Dayjs | null>(null);
@@ -58,19 +59,31 @@ export default function Home() {
 
   return (
     <main className="w-full h-full">
-      {toggle && <div className="absolute z-30 left-0 top-0 bottom-0 right-0 bg-[yellow] flex p-8 items-center flex-col justify-center">
-        <div className={`text-3xl md:text-5xl lg:text-6xl ${latoSemiBold.className} mb-8`}>Is het weer zo ver?</div>
-        <div className="flex gap-4">
-          <Button onClick={onClick}>Ja</Button>
-          <Button onClick={() => setToggle(false)}>Nee</Button>
+      {toggle && (
+        <div className="absolute z-30 left-0 top-0 bottom-0 right-0 bg-[yellow] flex p-8 items-center flex-col justify-center">
+          <div
+            className={`text-3xl md:text-5xl lg:text-6xl ${latoSemiBold.className} mb-8`}
+          >
+            Is het weer zo ver?
+          </div>
+          <div className="flex gap-4">
+            <Button onClick={onClick}>Ja</Button>
+            <Button onClick={() => setToggle(false)}>Nee</Button>
+          </div>
         </div>
-      </div>}
+      )}
 
       {!loading && lastTimes != null && (
         <div className="w-full h-full grid grid-rows-[1fr_auto]">
-          <div className={`flex-1 flex flex-col items-center justify-center text-center gap-4 p-8 ${latoSemiBold.className}`}>
-            <div className="text-4xl md:text-6xl lg:text-7xl uppercase mb-2 lg:mb-8">Het laatste paay incident was:</div>
-            <div className="text-3xl md:text-5xl lg:text-6xl text-yellow-500">{now.to(lastTimes)}</div>
+          <div
+            className={`flex-1 flex flex-col items-center justify-center text-center gap-4 p-8 ${latoSemiBold.className}`}
+          >
+            <div className="text-4xl md:text-6xl lg:text-7xl uppercase mb-2 lg:mb-8">
+              Het laatste paay incident was:
+            </div>
+            <div className="text-3xl md:text-5xl lg:text-6xl text-yellow-500">
+              {now.to(lastTimes)}
+            </div>
           </div>
           <div className="w-full flex justify-center px-4">
             <div className="w-full max-w-[500px] aspect-[500/379] relative">
@@ -93,8 +106,7 @@ export default function Home() {
                 }}
                 tabIndex={0}
                 style={{ outline: "none" }}
-              >
-              </button>
+              ></button>
             </div>
           </div>
         </div>
