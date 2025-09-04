@@ -27,7 +27,7 @@ const comicNeue = Comic_Neue({
 const Button = ({ children, onClick }: any) => {
   return (
     <button
-      className={`p-2 px-6 rounded-full shadow-sm font-bold ${comicNeue.className} text-lg border-black border-4 bg-white hover:bg-black hover:text-white`}
+      className={`p-2 px-8 shadow-sm font-bold ${comicNeue.className} border-black border-[3px]  hover:bg-black hover:text-white text-xl`}
       onClick={onClick}
     >
       {children}
@@ -61,14 +61,15 @@ export default function Home() {
   const now = dayjs();
 
   return (
-    <main className="w-full h-full">
+    <main className="w-full h-full bg-wack-1 overflow-auto">
       {toggle && (
-        <div className="absolute z-30 left-0 top-0 bottom-0 right-0 bg-wack-2 flex p-8 items-center flex-col justify-center gap-4">
+        <div className="absolute z-30 left-0 top-0 bottom-0 right-0 bg-wack-2 flex p-8 items-center flex-col justify-center gap-8">
           <div
-            className={`text-3xl md:text-5xl lg:text-7xl ${comicNeue.className} t`}
+            className={`text-5xl lg:text-7xl ${comicNeue.className} text-center uppercase`}
           >
             Is het weer zo ver?
           </div>
+
           <div className="flex gap-4">
             <Button onClick={onClick}>Ja</Button>
             <Button onClick={() => setToggle(false)}>Nee</Button>
@@ -77,24 +78,26 @@ export default function Home() {
       )}
 
       {!loading && lastTimes != null && (
-        <div className="w-full h-full flex justify-center flex-col bg-wack-1">
+        <div className="w-full min-h-full flex justify-center flex-col">
           <div
             className={`flex flex-col items-center justify-center text-center gap-4 p-8 ${comicNeue.className}`}
           >
             <div>
-              <div className="text-4xl md:text-6xl lg:text-7xl uppercase mb-8 h-full bg-[green] border-[yellow] border-4 pb-0 p-4 px-8">
-                <div className="wack-text block p-4 leading-tight pb-0">
-                  Het laatste despacito incident was:
+              <div className="text-4xl md:text-6xl lg:text-7xl uppercase mb-8 h-full bg-[green] border-[yellow] border-4">
+                <div className="p-10">
+                  <div className="wack-text block">
+                    Het laatste despacito incident was:
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="text-3xl md:text-5xl lg:text-6xl p-8 bg-[blue] text-[yellow]">
+            <div className="text-3xl p-8 px-16 bg-[blue] text-[yellow]">
               {now.to(lastTimes)}
             </div>
           </div>
 
-          <div className="w-full flex justify-center p-8">
+          <div className="mx-auto flex justify-center p-8">
             <div
               className="flex justify-center cursor-pointer flex-wrap gap-4"
               onClick={() => setToggle(true)}
@@ -105,8 +108,12 @@ export default function Home() {
                   src="/meuk/zocool.gif"
                   width={320}
                   height={267}
-                  style={{ objectFit: "contain", width: "100%", height: "auto" }}
-                  className=""
+                  style={{
+                    objectFit: "contain",
+                    width: "100%",
+                    height: "auto",
+                  }}
+                  className="select-none"
                 />
               </div>
               <div className="flex-shrink-1 max-w-[175px] md:max-w-[271px] w-full">
@@ -115,7 +122,12 @@ export default function Home() {
                   src="/meuk/genieton.gif"
                   width={271}
                   height={350}
-                  style={{ objectFit: "contain", width: "100%", height: "auto" }}
+                  style={{
+                    objectFit: "contain",
+                    width: "100%",
+                    height: "auto",
+                  }}
+                  className="select-none"
                 />
               </div>
             </div>

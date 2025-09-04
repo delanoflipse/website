@@ -16,15 +16,20 @@ dayjs.extend(relativeTime);
 
 const EVENT_NAME = "paay";
 
-const latoSemiBold = Lato({
+const latoBold = Lato({
   weight: "700",
+  subsets: ["latin"],
+});
+
+const latoSemiBold = Lato({
+  weight: "400",
   subsets: ["latin"],
 });
 
 const Button = ({ children, onClick }: any) => {
   return (
     <button
-      className={`p-2 px-8 rounded-full shadow-sm font-bold ${latoSemiBold.className} text-lg border-black border-4 hover:bg-black hover:text-white`}
+      className={`p-2 px-8 shadow-sm font-bold ${latoBold.className} border-black border-[3px] hover:bg-black hover:text-white text-xl`}
       onClick={onClick}
     >
       {children}
@@ -62,7 +67,7 @@ export default function Home() {
       {toggle && (
         <div className="absolute z-30 left-0 top-0 bottom-0 right-0 bg-[yellow] flex p-8 items-center flex-col justify-center">
           <div
-            className={`text-3xl md:text-5xl lg:text-6xl ${latoSemiBold.className} mb-8`}
+            className={`text-3xl md:text-5xl lg:text-7xl ${latoSemiBold.className} mb-8 uppercase`}
           >
             Is het weer zo ver?
           </div>

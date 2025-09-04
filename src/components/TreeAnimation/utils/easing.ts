@@ -27,6 +27,16 @@ export const easedValue = (value: NormalizedValue): NormalizedValue => {
 export const normalise = (value: number, maxValue: number): NormalizedValue => {
   return asNormalized(value / maxValue);
 };
+export const normaliseRange = (
+  value: number,
+  minValue: number,
+  maxValue: number
+): NormalizedValue => {
+  if (minValue == maxValue) {
+    return asNormalized(0.5);
+  }
+  return asNormalized((value - minValue) / (maxValue - minValue));
+};
 
 export const invert = (normValue: NormalizedValue): NormalizedValue => {
   return asNormalized(1 - normValue);

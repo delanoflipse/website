@@ -21,6 +21,10 @@ html,body {
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  transform: scaleY(1.5);
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+  display: inline-block;
 }
 
 .bg-wack-1 {
@@ -30,5 +34,5 @@ html,body {
 
 .bg-wack-2 {
   background-image: url('/meuk/godverwatlelijk.jpg');
-  background-repeat: repeat;
+  background-size: contain;
 }

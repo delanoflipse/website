@@ -22,7 +22,7 @@ export default async function Home() {
       <div className="grid grid-rows-[auto_1fr] p-6 lg:p-8 xl:p-16 gap-8 h-full relative z-10">
         <div className="">
           <div className="grid grid-cols-[auto_1fr] gap-6 items-center">
-            <div className="rounded-full w-16 h-16 lg:w-24 lg:h-24 overflow-hidden bg-white border-grey border">
+            <div className="rounded-full w-12 h-12 md:w-20 md:h-20 lg:w-24 lg:h-24 overflow-hidden bg-white border-grey border">
               <Image
                 src="/me.png"
                 alt="Delano"
@@ -83,7 +83,7 @@ export default async function Home() {
 
         <div>
           <span className="text-gray-600">
-            &copy; {new Date().getFullYear()} {"\u2022"} Delano Flipse
+            &copy; {new Date().getFullYear()} Delano Flipse
           </span>
         </div>
       </div>
