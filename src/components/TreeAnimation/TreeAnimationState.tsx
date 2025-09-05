@@ -5,42 +5,34 @@ import {
   NormalizedValue,
   asNormalized,
   clamp,
-  invert,
   lerp,
   normalise,
-  normaliseRange,
   randomSample,
 } from "./utils/easing";
 import { integerNormalSample, normalSample } from "./utils/random";
 
 export const MAX_DEPTH: number = 3;
+
+// [cont at minContinuation, cont at maxContinuation]
 export const MAX_CONTINUATION: [number, number][] = [
-  [7, 7],
-  [4, 2],
-  [2, 1],
-  [1, 1],
+  [5, 5],
+  [5, 2],
+  [1, 0],
+  [0, 0],
+];
+export const MAX_BRANCHING: [number, number][] = [
+  [4, 3],
+  [5, 3],
+  [4, 3],
+  [3, 2],
 ];
 export const MAX_SIZES: number[] = [0.2, 0.1, 0.05, 0.02];
 
-export const AVG_BRANCHES = 3;
-export const BRANCH_VARIANCE = 1;
 export const MAX_NODES = 1200;
 
 // Average duration for a spruce to grow in seconds
 export const GROWTH_RATE = 0.5;
 const GROW_AT_END = 0.8;
-
-export const getMaxContinuation = (depth: number, continuation: number) => {
-  const range = MAX_CONTINUATION[depth] ?? [1, 1];
-  const continuationRange = MAX_CONTINUATION[depth - 1] ?? [1, 1];
-  const progress = normaliseRange(
-    continuation,
-    continuationRange[0],
-    continuationRange[1]
-  );
-  const rangeSize = range[0] - range[1];
-  return Math.round(range[0] + progress * rangeSize);
-};
 
 let nodeCount = 0;
 
@@ -61,6 +53,7 @@ type TreeNodeAttributes = {
   continuationDepth: number;
   combinedDepth: number;
   maxContinuation: number;
+  maxCombinedDepth: number;
 };
 
 type BranchInfo = {
@@ -105,27 +98,70 @@ export const getSize = ({ depth }: TreeNodeAttributes) => {
   return value;
 };
 
+const getFromRange = (
+  ranges: [number, number][],
+  index: number,
+  progress: number
+) => {
+  const [min, max] = ranges[index] ?? [1, 1];
+  return Math.round(progress * (max - min) + min);
+};
+
+export const getBranchCount = (
+  depth: number,
+  continuation: number,
+  maxContinuation: number
+) => {
+  return getFromRange(MAX_BRANCHING, depth, continuation / maxContinuation);
+};
+
+export const getMaxContinuation = (
+  depth: number,
+  continuation: number,
+  maxContinuation: number
+) => {
+  return getFromRange(MAX_CONTINUATION, depth, continuation / maxContinuation);
+};
+
 const getNewTreeAttributes = (
   parent: TreeNode | null,
   isContinuation: boolean
 ): TreeNodeAttributes => {
-  const parentDepth = parent?.attributes.depth ?? 0;
-  const parentContinuationDepth = parent?.attributes.continuationDepth ?? 0;
-  const parentCombinedDepth = parent?.attributes.combinedDepth ?? 0;
+  // base case
+  if (parent == null) {
+    return {
+      isContinuation: true,
+      depth: 0,
+      continuationDepth: 0,
+      combinedDepth: 0,
+      maxContinuation: MAX_CONTINUATION[0][0],
+      maxCombinedDepth: MAX_CONTINUATION[0][0],
+    };
+  }
+
+  const parentDepth = parent.attributes.depth;
+  const parentContinuationDepth = parent.attributes.continuationDepth;
+  const parentCombinedDepth = parent.attributes.combinedDepth;
   const combinedDepth = parentCombinedDepth + 1;
 
   let depth = 0;
   let continuationDepth = 0;
+  let maxContinuation = parent.attributes.maxContinuation;
+  let maxCombinedDepth = parent.attributes.maxCombinedDepth;
 
   if (isContinuation) {
     depth = parentDepth;
     continuationDepth = parentContinuationDepth + 1;
   } else {
     depth = parentDepth + 1;
-    continuationDepth = parentContinuationDepth;
-  }
+    maxContinuation = getMaxContinuation(
+      depth + 1,
+      parentCombinedDepth,
+      parent.attributes.maxContinuation
+    );
 
-  const maxContinuation = getMaxContinuation(depth, continuationDepth);
+    maxCombinedDepth = parentCombinedDepth + maxContinuation + 1;
+  }
 
   return {
     isContinuation,
@@ -133,6 +169,7 @@ const getNewTreeAttributes = (
     continuationDepth,
     combinedDepth,
     maxContinuation,
+    maxCombinedDepth,
   };
 };
 
@@ -153,7 +190,11 @@ export const createTreeNode = (
 
   const direction = new Victor(0, 1).rotateBy(angleToRadians(angle));
   const length = getSize(attributes);
-  const branchCount = integerNormalSample(AVG_BRANCHES, BRANCH_VARIANCE);
+  const branchCount = getBranchCount(
+    depth,
+    continuationDepth,
+    attributes.maxContinuation
+  );
   const branches: BranchInfo[] = range(branchCount)
     .map(() => {
       const growAt = randomSample(0.15, 0.85);
@@ -166,7 +207,7 @@ export const createTreeNode = (
 
   const growDepthFactor = lerp(normalise(depth, MAX_DEPTH), 1, 0.2);
   const growContinuationFactor = lerp(
-    normalise(continuationDepth, parent?.attributes.maxContinuation ?? 1),
+    normalise(continuationDepth, attributes.maxContinuation),
     1,
     0.2
   );
@@ -225,11 +266,10 @@ export const updateTree = (
   // continuations
   const growEnd =
     growthBefore < GROW_AT_END && node.state.growth >= GROW_AT_END;
-  const maxContinuationForDepth = getMaxContinuation(
-    node.attributes.depth,
-    node.attributes.continuationDepth
-  );
-  if (growEnd && node.attributes.continuationDepth < maxContinuationForDepth) {
+  if (
+    growEnd &&
+    node.attributes.continuationDepth < node.attributes.maxContinuation
+  ) {
     const newChild = createTreeNode(node, true, 1);
     node.children.push(newChild);
     nodeCount++;

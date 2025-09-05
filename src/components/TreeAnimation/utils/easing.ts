@@ -25,8 +25,12 @@ export const easedValue = (value: NormalizedValue): NormalizedValue => {
 };
 
 export const normalise = (value: number, maxValue: number): NormalizedValue => {
+  if (maxValue === 0) {
+    return asNormalized(0);
+  }
   return asNormalized(value / maxValue);
 };
+
 export const normaliseRange = (
   value: number,
   minValue: number,
@@ -66,6 +70,13 @@ export const lerpInv = (
   }
 
   throw new Error("Invalid range!");
+};
+
+export const lerper = (zeroValue: number, oneValue: number) => {
+  return (value: number) => {
+    const lerped = (value - zeroValue) / (oneValue - zeroValue);
+    return clamp(lerped);
+  };
 };
 
 export const randomSample = (

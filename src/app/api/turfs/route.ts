@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { neon } from "@neondatabase/serverless";
 
+// Get the latest turf entry for a specific event
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const event_name = searchParams.get("event");
@@ -13,6 +14,7 @@ export async function GET(request: Request) {
   return NextResponse.json(response);
 }
 
+// Create a new turf entry
 export async function POST(request: Request) {
   const { event_name } = await request.json();
 

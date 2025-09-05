@@ -1,10 +1,10 @@
 import React from "react";
 import Image from "next/image";
 
-interface TechIconProps {
+type TechIconProps = Readonly<{
   icon: string | React.ReactElement;
   name: string;
-}
+}>;
 
 export default function TechIcon({ icon, name }: TechIconProps) {
   return (
